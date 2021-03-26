@@ -47,9 +47,9 @@
     <?php
     // connect database 
     $db_host = "localhost";
-    $db_user = "Apologize";
-    $db_password = "Apologize0743++";        
-    $db_name = "netclix";
+    $db_user = "root";
+    $db_password = "";        
+    $db_name = "blog";
 
     $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
     $mysqli->set_charset("utf8");

@@ -6,7 +6,7 @@ session_start();
 require_once('db.php');
 
 
-$sql = "SELECT ar.id,ar.title,ar.body,ar.create_ts,ar.updatetime,a.penname
+$sql = "SELECT ar.id,ar.title,ar.body,ar.create_ts,ar.updatetime,ar.image_url,a.penname
             FROM articles ar INNER JOIN authors a
             ON authors_id = a.id
             WHERE publish_sts = 'Y'
@@ -100,6 +100,7 @@ $result = $mysqli->query($sql);
           <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
               <div class="post-preview">
+              <img src="uploads/'.$row->image_url.'">
                 <a href="post.php?id='.$row->id.'">
                   <h1 class="post-title">' . $row->title . '</h1>
                 </a>

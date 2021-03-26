@@ -42,9 +42,47 @@
         // print_r($_POST);
         // echo"</pre>";
         session_start();
-        if(isset($_POST['submit'])){
-            $titles = $_POST['title'];
-            $bodys = $_POST['body'];
+        if(isset($_POST['submit']) && isset($_FILES['my_image'])){
+        echo "<pre>";
+	print_r($_FILES['my_image']);
+	echo "</pre>";
+    $titles = $_POST['title'];
+    $bodys = $_POST['body'];
+
+	$img_name = $_FILES['my_image']['name'];
+	$img_size = $_FILES['my_image']['size'];
+	$tmp_name = $_FILES['my_image']['tmp_name'];
+	$error = $_FILES['my_image']['error'];
+
+	if ($error === 0) {
+		if ($img_size > 125000) {
+			$em = "Sorry, your file is too large.";
+		    header("Location: index.php?error=$em");
+		}else {
+			$img_ex = pathinfo($img_name, PATHINFO_EXTENSION);
+			$img_ex_lc = strtolower($img_ex);
+
+			$allowed_exs = array("jpg", "jpeg", "png"); 
+
+			if (in_array($img_ex_lc, $allowed_exs)) {
+				$new_img_name = uniqid("IMG-", true).'.'.$img_ex_lc;
+				$img_upload_path = 'uploads/'.$new_img_name;
+				move_uploaded_file($tmp_name, $img_upload_path);
+
+				// Insert into Database
+			}else {
+				$em = "You can't upload files of this type";
+		        header("Location: index.php?error=$em");
+			}
+		}
+	}else {
+		$em = "unknown error occurred!";
+		header("Location: index.php?error=$em");
+	}
+
+}
+	
+
             $id = $_SESSION['id'];
             $updatetime = date('Y-m-d H:i:s');
             $publish_sts = 'N';
@@ -53,7 +91,7 @@
             $result = $mysqli->query($sql);
     
             $stmt = $mysqli->prepare($sql);
-            $stmt->bind_param("sssss", $titles,$bodys,$id,$updatetime,$publish_sts);
+            $stmt->bind_param("ssssss", $titles,$bodys,$id,$updatetime,$publish_sts,$new_img_name);
             $stmt->execute();
             // echo $stmt->affected_rows;
             if($stmt->affected_rows == -1){
@@ -62,7 +100,7 @@
             }else{
                 header("location: mywork.php");
             }
-        }
+        
        
     ?>
     <!-- Page Header -->
@@ -73,7 +111,7 @@
                 <div class="col-12 col-md-12 mx-auto">
                     <div class="site-heading">
                         <h3>Add Articles</h3><br>
-                        <form action="" method="post" name="addform" onSubmit="return addformValidation();">
+                        <form action="" method="post" name="addform" onSubmit="return addformValidation();" enctype="multipart/form-data">
                             <!-- Title -->
                             <div class="form-group row">
                                 <label for="title" class="col-md-1 col-sm-1 col-3 col-form-label">
@@ -92,10 +130,7 @@
                                         name="body" rows="7"></textarea>
                                 </div>
                             </div>
-                            <form class="imgForm" action="leanform.php" method="post" enctype="multipart/form-data">
-                                <input type="file" name="upload" />
-                                <input type="submit"  name="save"  value="upload" />
-                                
+                                <input type="file" name="my_image" />                                
                             <!-- Name & Publish_sts-->
                             <div class="form-group">
                                 <div class="row justify-content-center">

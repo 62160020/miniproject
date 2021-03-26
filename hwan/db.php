@@ -49,8 +49,8 @@
                 else create_ts END DESC";
     }
     function connectDB6(){ //หน้าเพิ่มบทความใหม่
-        return "INSERT INTO articles (title, body, authors_id, updatetime, publish_sts)
-                VALUES (?, ?, ?, ?, ?)";
+        return "INSERT INTO articles (title, body, authors_id, updatetime, publish_sts,image_url)
+                VALUES (?, ?, ?, ?, ?,?)";
                 // session['id'] date('Y-m-d H:i:s') 'N'"
     }
     function connectDB7(){ //publish / unpublish

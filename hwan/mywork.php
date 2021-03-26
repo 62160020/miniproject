@@ -117,6 +117,7 @@ $result = $mysqli->query($sql);
           <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
               <div class="post-preview">
+              <img src="uploads/'.$row->image_url.'" style="width: 200px;height: 200px">
               <a href="post.php?id=' . $row->id . '">
                   <h1 class="post-title">' . $row->title . '</h1>
                 </a>
